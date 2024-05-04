@@ -1,0 +1,39 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "./generated/prisma-client-js"
+}
+
+datasource db {
+    // provider = "sqlite"
+    // url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = "file:./dev.db"
+}
+
+model User {
+    id    Int     @id @default(autoincrement())
+    email String  @unique
+    name  String?
+}
+
+model Container {
+    id   Int    @id @default(autoincrement())
+    name String
+    pods Pods[]
+}
+
+model Pods {
+    id          Int        @id @default(autoincrement())
+    title       String
+    Container   Container? @relation(fields: [containerId], references: [id])
+    containerId Int?
+    booking     Bookings[]
+}
+
+model Bookings {
+    id        Int      @id @default(autoincrement())
+    startTime DateTime
+    endTime   DateTime
+    Pods      Pods?    @relation(fields: [podsId], references: [id])
+    podsId    Int?
+}
